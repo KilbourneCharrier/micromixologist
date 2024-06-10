@@ -1,0 +1,20 @@
+/* Styles for the password-protected page */
+
+#login {
+  text-align: center;
+  margin: 20px;
+}
+
+#password {
+  width: 50%;
+  padding: 10px;
+  font-size: 18px;
+}
+
+#protected-content {
+  display: none; /* initially hidden */
+}
+
+#protected-content.show {
+  display: block;
+}
