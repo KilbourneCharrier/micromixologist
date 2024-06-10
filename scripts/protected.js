@@ -2,7 +2,7 @@
 const passwordInput = document.getElementById('password-input');
 
 // Set the password (hardcoded for simplicity, but you should use a secure method)
-const password = process.env.PASSWORD
+const password = "MARK"
 
 // Add an event listener to the password input field
 passwordInput.addEventListener('input', (e) => {
@@ -16,17 +16,37 @@ passwordInput.addEventListener('input', (e) => {
   }
 });
 
-// Create the protected page content
-const protectedContent = document.getElementById('protected-content');
-protectedContent.innerHTML = `
-  <h1>Protected Page</h1>
-  <table id="options-table">
-    ${Array(16).fill('').map((_, i) => `
-      <tr>
-        <td>${i + 1}</td>
-        <td><input type="text" id="option-${i + 1}-value" /></td>
-        <td><input type="text" id="option-${i + 1}-string" /></td>
-      </tr>
-    `).join('')}
-  </table>
-`;
+// Get the submit button
+const submitButton = document.getElementById('submit');
+
+// Add an event listener to the submit button
+submitButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  checkPassword();
+});
+
+// Check password
+function checkPassword() {
+  const userInput = passwordInput.value;
+ 
+  if (userInput === password) {
+    // Show the protected page content
+    document.getElementById('protected-content').style.display = 'block';
+
+    // Hide the login form
+    document.getElementById('login').style.display = 'none';
+
+    generateRows(); // Generate 16 rows dynamically
+  } else {
+    alert('Incorrect password!');
+  }
+}
+
+// Generate Rows
+function generateRows() {
+  const table = document.getElementById('options-table');
+  for (let i = 1; i <= 16; i++) {
+    const row = table.insertRow();
+    row.innerHTML = `<td>${i}</td><td><input type="text" class="part-count"></td><td><input type="text" class="part-name"></td>`;
+  }
+}

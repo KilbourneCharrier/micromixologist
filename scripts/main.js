@@ -1,94 +1,67 @@
-// Import Firebase functions
-import { db, storage } from './firebase/firebase';
+document.addEventListener("DOMContentLoaded", function() {
+    // Create password input
+    let passwordInput = createElement('input', {type:'password', id:'password-input', placeholder:'Enter Password'});
+    let submitButton = createElement('button', {id: 'submit', innerText: 'Submit'});
+    let loginDiv = createElement('div', {id: 'login'}, passwordInput, submitButton);
 
-// Get references to HTML elements
-const optionContainer = document.getElementById('option-container');
-const concoctionIndicator = document.getElementById('concoction-indicator');
-const codeDisplay = document.getElementById('code-display');
+    // Create div for protected content
+    let protectedDiv = createElement('div', {id: 'protected-content', style: 'display: none;'})
+    // Append elements to body
+    document.body.append(loginDiv, protectedDiv);
+    // Code here is the same as before, with minor edits
 
-// Initialize options array
-let options = [];
+    const password = "MARK" 
 
-// Fetch data from Firestore
-db.collection('options').get().then(snapshot => {
-  snapshot.docs.forEach(doc => {
-    const option = doc.data();
-    options.push(option);
-    // Create option HTML element
-    const optionHTML = `
-      <div class="option">
-        <img src="${option.image}" alt="${option.name}">
-        <span>${option.name}</span>
-        <input type="checkbox" id="option-${option.id}">
-      </div>
-    `;
-    optionContainer.innerHTML += optionHTML;
-  });
-});
+    passwordInput.addEventListener('input', (e) => {
+        const userInput = e.target.value;
+        if (userInput === password) {
+            // Show the protected page content
+            protectedDiv.style.display = 'block';
+        } else {
+            // Hide the protected page content
+            protectedDiv.style.display = 'none';
+        }
+    });
 
-// Add event listeners to option checkboxes
-optionContainer.addEventListener('change', (e) => {
-  if (e.target.tagName === 'INPUT' && e.target.type === 'checkbox') {
-    const optionId = e.target.id.replace('option-', '');
-    const option = options.find(o => o.id === optionId);
-    if (e.target.checked) {
-      // Add part to concoction
-      addPartToConcoction(option);
-    } else {
-      // Remove part from concoction
-      removePartFromConcoction(option);
+    submitButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        checkPassword();
+    });
+
+    function checkPassword() {
+        const userInput = passwordInput.value;
+ 
+        if (userInput === password) {
+            // Show the protected page content
+            protectedDiv.style.display = 'block';
+            // Hide the login form
+            loginDiv.style.display = 'none';
+            generateRows(); // Generate 16 rows dynamically
+        } else {
+            alert('Incorrect password!');
+        }
     }
-  }
+
+    function generateRows() {
+        const table = document.createElement('table');
+        table.id = 'options-table';
+        for (let i = 1; i <= 16; i++) {
+            const row = table.insertRow();
+            row.innerHTML = `<td>${i}</td><td><input type="text" class="part-count"></td><td><input type="text" class="part-name"></td>`;
+        }
+        protectedDiv.append(table);
+    }
 });
 
-// Function to add part to concoction
-function addPartToConcoction(option) {
-  // Update concoction indicator and code display
-  updateConcoctionIndicator();
-  updateCodeDisplay();
-}
-
-// Function to remove part from concoction
-function removePartFromConcoction(option) {
-  // Update concoction indicator and code display
-  updateConcoctionIndicator();
-  updateCodeDisplay();
-}
-
-// Function to update concoction indicator
-function updateConcoctionIndicator() {
-  const selectedOptions = options.filter(o => o.selected);
-  const concoctionText = getConcoctionText(selectedOptions);
-  concoctionIndicator.textContent = concoctionText;
-}
-
-// Function to update code display
-function updateCodeDisplay() {
-  const selectedOptions = options.filter(o => o.selected);
-  const code = getCode(selectedOptions);
-  codeDisplay.textContent = code;
-}
-
-function getConcoctionText(selectedOptions) {
-  // Concatenates selected options with commas
-  return selectedOptions.join(', ');
-}
-
-function getCode(selectedOptions) {
-  // Hashes the concatenated string of selected options
-  return hashCode(selectedOptions.join(', '));
-}
-
-function hashCode(s){
-      return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
-}
-
-async function fetchImage(query) {
-  try {
-      const response = await fetch(`https://www.googleapis.com/customsearch/v1?q=${query}&key=YOUR_API_KEY&cx=YOUR_SEARCH_ENGINE_ID&searchType=image`);
-      const data = await response.json();
-      return data.items[0].link;
-  } catch (error) {
-      console.log(error);
-  }
+function createElement(tag, attributes, ...children) {
+    let element = document.createElement(tag);
+    for(let key in attributes) {
+        if(key === 'innerText') {
+            element.innerText = attributes[key];
+        } else {
+            element.setAttribute(key, attributes[key]);
+        }
+    }
+    element.append(...children);
+    return element;
 }

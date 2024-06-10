@@ -3,72 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-    <style>
-        /* Add your styles here */
-    </style>
+    <title>Protected Page</title>
 </head>
 <body>
-    <div id="options">
-        <!-- Options will be populated here -->
-    </div>
-    <div id="indicator">concoction 0% portioned</div>
-    <div id="code">XXXXXXXXXX</div>
-    <script>
-        // Fetch saved values and images from the back end
-
-        const options = [
-            // Example options, replace with dynamic content
-            { name: 'Option 1', image: 'image1.jpg' },
-            // ... up to 16 options
-        ];
-
-        function renderOptions() {
-            const optionsContainer = document.getElementById('options');
-            options.forEach((option, index) => {
-                const optionDiv = document.createElement('div');
-                optionDiv.className = 'option';
-                optionDiv.innerHTML = `
-                    <img src="${option.image}" alt="${option.name}">
-                    <p>${option.name}</p>
-                    <input type="number" min="0" max="10" value="0" class="part-count" data-index="${index}">
-                `;
-                optionsContainer.appendChild(optionDiv);
-            });
-        }
-
-        renderOptions();
-
-        document.querySelectorAll('.part-count').forEach(input => {
-            input.addEventListener('input', updateConcoction);
-        });
-
-        function updateConcoction() {
-            const parts = [];
-            document.querySelectorAll('.part-count').forEach(input => {
-                const count = parseInt(input.value);
-                if (count > 0) {
-                    parts.push({ name: options[input.dataset.index].name, count });
-                }
-            });
-
-            const totalParts = parts.reduce((sum, part) => sum + part.count, 0);
-            const indicator = document.getElementById('indicator');
-            const code = document.getElementById('code');
-
-            if (totalParts === 0) {
-                indicator.innerText = 'concoction 0% portioned';
-                code.innerText = 'XXXXXXXXXX';
-            } else if (totalParts === 10) {
-                const names = parts.map(part => `${part.count} part${part.count > 1 ? 's' : ''} ${part.name}`).join(' and ');
-                indicator.innerText = `concoction ${names} (100% filled)`;
-                code.innerText = parts.map(part => part.name[0].repeat(part.count)).join('*');
-            } else {
-                const names = parts.map(part => `${part.count} part${part.count > 1 ? 's' : ''} ${part.name}`).join(' and ');
-                indicator.innerText = `concoction ${names} (${totalParts * 10}% filled)`;
-                code.innerText = parts.map(part => part.name[0].repeat(part.count)).join('*') + 'X'.repeat(10 - totalParts);
-            }
-        }
-    </script>
+    <script src="scripts/protected.js"></script>
 </body>
 </html>

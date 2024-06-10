@@ -10,56 +10,12 @@
 </head>
 <body>
     <div id="login">
-        <input type="password" id="password" placeholder="Enter Password">
-        <button onclick="checkPassword()">Submit</button>
+        <input type="password" id="password-input" placeholder="Enter Password">
+        <button id="submit">Submit</button>
     </div>
     <div id="protected-content">
-        <form id="form">
-            <table id="options-table">
-                <tr><th>Row</th><th>Field 1</th><th>Field 2</th></tr>
-                <!-- Dynamically generate 16 rows here -->
-            </table>
-            <button type="submit">Save</button>
-            <div id="indicator"></div>
-        </form>
-    </div>
-    <script>
-        function checkPassword() {
-            const password = document.getElementById('password').value;
-            if (password === 'YOUR_LONG_PASSWORD') {
-                document.getElementById('login').style.display = 'none';
-                document.getElementById('protected-content').style.display = 'block';
-                generateRows(); // Generate 16 rows dynamically
-            } else {
-                alert('Incorrect Password');
-            }
-        }
+        <!-- The rest of your HTML code -->
 
-        function generateRows() {
-            const table = document.getElementById('options-table');
-            for (let i = 1; i <= 16; i++) {
-                const row = table.insertRow();
-                row.innerHTML = `<td>${i}</td><td><input type="text" class="part-count"></td><td><input type="text" class="part-name"></td>`;
-            }
-        }
-
-        document.getElementById('form').onsubmit = function(event) {
-            event.preventDefault();
-            const parts = [];
-            document.querySelectorAll('.part-count').forEach(input => {
-                if (input.value !== '') {
-                    parts.push({ count: input.value, name: input.nextElementSibling.value });
-                }
-            });
-            const indicator = generateIndicator(parts);
-            document.getElementById('indicator').innerText = indicator;
-        }
-
-        function generateIndicator(parts) {
-            // Implement the logic for generating the indicator string based on the number of selected options
-            // Refer to the tryme.md file for the specific rules
-            // ...
-        }
-    </script>
+    <script src="scripts/protected.js"></script> <!-- Link to your external Javascript file -->
 </body>
 </html>
